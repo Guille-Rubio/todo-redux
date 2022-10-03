@@ -11,7 +11,11 @@ const taskListSlice = createSlice({
     name: 'tasklist',
     initialState,
     reducers: {
-        addTask: (state, action) => {
+        setInitialTaskList: (state, action) => {
+            const initialTasks = action.payload;
+            return { ...state, tasks: [...state.tasks, initialTasks] }
+        },
+        addNewTask: (state, action) => {
             const newTask = {
                 date: new Date().toJSON(),
                 title: action.payload,
@@ -20,6 +24,11 @@ const taskListSlice = createSlice({
             };
 
             return { ...state, tasks: [...state.tasks, newTask] }
+        },
+        addManyTasks: (state, action) => {
+            const addedTasks = action.payload;
+            return { ...state, tasks: [...state.tasks, ...addedTasks] };
+
         },
         editTask: (state, action) => {
             const { index, updatedTask } = action.payload;
@@ -54,5 +63,5 @@ const taskListSlice = createSlice({
     }
 });
 
-export const { addTask, editTask, deleteTask, deleteAllTasks, toggleTaskCompleted } = taskListSlice.actions;
+export const { addNewTask, addManyTasks, editTask, deleteTask, deleteAllTasks, toggleTaskCompleted, setInitialTaskList } = taskListSlice.actions;
 export default taskListSlice.reducer;
