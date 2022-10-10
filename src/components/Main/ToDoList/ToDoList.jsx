@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
+import { v1 as uuidv1 } from 'uuid';
 import ToDoCard from '../ToDoCard/ToDoCard';
 import { addNewTask, addManyTasks, deleteTask, deleteAllTasks } from '../../../redux/slices/taskListSlice';
 import { useEffect } from "react";
@@ -23,7 +23,6 @@ const ToDoList = () => {
       console.log(request.data)
       dispatch(addManyTasks(request.data));
       //SET TASKLIST EQUAL TO FETCH RESULT
-
     }
     fetchTasks();
     // eslint-disable-next-line
@@ -33,26 +32,21 @@ const ToDoList = () => {
     event.preventDefault();
     const taskInput = newTaskInput.current.value;
     try {
-      const savedTasks = await axios({
-        method: 'get',
-        url: 'http://localhost:5000',
-      })
-      const position = savedTasks.data.length;
 
+      //Position should be replaced by a serial number to order
       const request = await axios({
         method: 'post',
         url: 'http://localhost:5000',
         data: {
-          task: taskInput,
-          position: position
+          title: taskInput,
+          position: ""
         }
       });
 
-
-
-      console.log("Added item ", request.data);
-      dispatch(addNewTask(taskInput));
+      console.log("Added item ", request.data.id);
+      dispatch(addNewTask({ title: taskInput, id: request.data.id }));
       newTaskInput.current.value = "";
+
     } catch (error) {
       console.log(error.message);
       alert("Task saving failed");
@@ -60,16 +54,16 @@ const ToDoList = () => {
 
   };
 
-  const deleteCard = (i) => {
+  const deleteCard = async (i, id) => {
     try {
       console.log("delete item ", i)
-      axios({
+      await axios({
         method: 'delete',
         url: 'http://localhost:5000',
-        data: { position: i }
+        data: { id: id }
 
       });
-      dispatch(deleteTask(i))
+      dispatch(deleteTask(i));
     } catch (error) {
       console.log(error.message);
       alert('Task deletion failed');
@@ -77,8 +71,21 @@ const ToDoList = () => {
 
   };
 
-  const deleteAllCards = () => { dispatch(deleteAllTasks()) };
-  const printCards = () => taskList.map((task, i) => <ToDoCard key={uuidv4()} data={task} index={i} delete={() => deleteCard(i)} />);
+  const deleteAllCards = async () => {
+    try {
+      await axios({
+        method: 'delete',
+        url: 'http://localhost:5000/all',
+      });
+      dispatch(deleteAllTasks());
+    } catch (error) {
+      console.log(error.message);
+      alert('Task deletion failed');
+    }
+
+
+  };
+  const printCards = () => taskList.map((task, i) => <ToDoCard key={uuidv1()} task={task} index={i} delete={() => deleteCard(i, task.id)} />);
 
   return <section className="todolist">
     <h2>To do list</h2>

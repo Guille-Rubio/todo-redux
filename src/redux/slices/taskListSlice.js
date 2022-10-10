@@ -18,7 +18,8 @@ const taskListSlice = createSlice({
         addNewTask: (state, action) => {
             const newTask = {
                 date: new Date().toJSON(),
-                title: action.payload,
+                title: action.payload.title,
+                id: action.payload.id,
                 completed: false,
                 position: state.tasks.length + 1
             };
@@ -28,7 +29,6 @@ const taskListSlice = createSlice({
         addManyTasks: (state, action) => {
             const addedTasks = action.payload;
             return { ...state, tasks: [...state.tasks, ...addedTasks] };
-
         },
         editTask: (state, action) => {
             const { index, updatedTask } = action.payload;
@@ -41,16 +41,17 @@ const taskListSlice = createSlice({
             }
         },
         deleteTask: (state, action) => {
+            console.log(action.payload)
             return {
                 ...state, tasks:
-                    state.tasks.filter((element, i) => i !== action.payload)
+                    state.tasks.filter((element) => element.id !== action.payload)
             }
         },
         deleteAllTasks: (state) => {
             return { ...state, tasks: [] }
         },
         toggleTaskCompleted: (state, action) => {
-            const { index, status } = action.payload;
+            const { status, index } = action.payload;
             return {
                 ...state, tasks:
                     [...state.tasks.slice(0, index),
