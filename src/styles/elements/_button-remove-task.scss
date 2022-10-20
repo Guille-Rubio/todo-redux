@@ -1,10 +1,17 @@
-.button1{
+@import '../utils//variables.scss';
+@import '../utils/mixins.scss';
+
+.button-remove-task {
+    @include centered-content;
+    height:20px;
+    width:20px;
+    border-radius: 50%;
+    font-size: 8px;
     background-color: #23c483;
     border: none;
     transition: all 0.3s ease 0s;
     cursor: pointer;
     outline: none;
-    border-radius: 5px;
 
     &:hover {
         background-color: $red;
@@ -16,5 +23,4 @@
     &:active {
         transform: translateY(1px);
     }
-
 }

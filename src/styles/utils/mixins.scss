@@ -24,7 +24,14 @@
 }
 
 @mixin inset-shadow {
-    -webkit-box-shadow: inset 0px 0px 9px 3px rgba(0,0,0,0.62);
-    -moz-box-shadow: inset 0px 0px 9px 3px rgba(0,0,0,0.62);
-    box-shadow: inset 0px 0px 9px 3px rgba(0,0,0,0.62);
+    -webkit-box-shadow: inset 0px 0px 9px 3px rgba(0, 0, 0, 0.62);
+    -moz-box-shadow: inset 0px 0px 9px 3px rgba(0, 0, 0, 0.62);
+    box-shadow: inset 0px 0px 9px 3px rgba(0, 0, 0, 0.62);
+}
+
+@mixin gray-gradient {
+    background: rgb(40, 49, 59);
+    background: linear-gradient(90deg, rgba(40, 49, 59, 1) 28%, rgba(72, 84, 97, 1) 74%);
+
+
 }

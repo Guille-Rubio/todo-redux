@@ -1,11 +1,14 @@
 import React from "react";
 import ToDoList from "./ToDoList";
+import { Route, Routes } from "react-router-dom";
 
 
 const Main = () => {
 
   return <main className="main">
-      <ToDoList />
+    <Routes>
+      <Route element={<ToDoList />} path="/" />
+    </Routes>
   </main>;
 };
 

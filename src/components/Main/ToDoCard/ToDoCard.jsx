@@ -25,7 +25,7 @@ const ToDoCard = (props) => {
     try {
       await axios({
         method: 'put',
-        url: 'http://localhost:5000',
+        url: 'http://localhost:5000/tasks',
         data: {
           title: event.target.value,
           id: props.task.id //puede borrar mas de uno en Strict Mode
@@ -47,7 +47,7 @@ const ToDoCard = (props) => {
 
       const edit = await axios({
         method: 'put',
-        url: 'http://localhost:5000',
+        url: 'http://localhost:5000/tasks',
         data: { id: props.task.id, completed: status }
       });
       console.log(completed);
@@ -60,13 +60,35 @@ const ToDoCard = (props) => {
     }
   };
 
+  const handleOnDrag = (event) => {
+    event.dataTransfer.setData("text/plain", "VALUE DRAGGED");
+    event.dataTransfer.effectAllowed = "move";//The value will be moved from original position
+    props.setDraggedItem(event.target);
+  };
 
-  return <form ref={nodeRef} className={`todocard${completed ? "__completed" : ""}`}>
+  const handleOnDragEnd = (event) => {
+    //TODO set state to empty when drag ends
+    event.preventDefault();
+    console.log("THE END");
+    props.setDraggedItem('');
+
+  };
+
+
+
+
+  return <form
+    ref={nodeRef}
+    className={`todocard${completed ? "__completed" : ""}`}
+    draggable="true"
+    onDrag={handleOnDrag}
+    onDragEnd={handleOnDragEnd}>
+
     <div className="todocard__element" ><img src={dragIcon} alt="drag icon" className="todocard__drag-icon" /></div>
     <input type="checkbox" /* defaultChecked={completed} */ onChange={toggleCompletion} checked={completed} />
     <input type="text" value={taskInput} onChange={updateTask} onBlur={updateTitle}></input>
-    <button className="button1" onClick={props.delete}>X</button>
-  </form>
+    <button className="button-remove-task" onClick={props.delete}>X</button>
+  </form >
 };
 
 
