@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { v1 as uuidv1 } from 'uuid';
@@ -10,23 +10,28 @@ import { addNewTask, addManyTasks, deleteTask, deleteAllTasks } from '../../../r
 const ToDoList = () => {
 
   const taskList = useSelector((state) => state.taskList.tasks);
+  const user = useSelector((state) => state.user.user)
   const dispatch = useDispatch();
   const newTaskInput = useRef(null);
-  const [/* draggedItem */, setDraggedItem] = useState("");
+
+  //let draggedItem;
 
 
   useEffect(() => {
-    //TO DO: Disable double fetch to print cards save in mongo db
-    const fetchTasks = async () => {
-      const request = await axios({
-        method: 'get',
-        url: 'http://localhost:5000/tasks',
-        withCredentials:true
-      });
-      console.log(request.data)
-      dispatch(addManyTasks(request.data));
-    }
-    fetchTasks();
+    //TO DO: Disable strict mode double fetch to print cards save in mongo db
+    //disable where no user is logged (using redux)
+  
+      const fetchTasks = async () => {
+        const request = await axios({
+          method: 'get',
+          url: 'http://localhost:5000/tasks',
+          withCredentials: true
+        });
+        console.log(request.data)
+        dispatch(addManyTasks(request.data));
+      }
+      fetchTasks();
+    
     // eslint-disable-next-line
   }, [])
 
@@ -39,7 +44,7 @@ const ToDoList = () => {
       const request = await axios({
         method: 'post',
         url: 'http://localhost:5000/tasks',
-        withCredentials:true,
+        withCredentials: true,
         data: {
           title: taskInput,
           position: "",
@@ -93,6 +98,11 @@ const ToDoList = () => {
 
   };
 
+  const setDraggedItem = (item) => {
+    // draggedItem = item;
+    //TODO check whether this works or state should be used
+  }
+
   const printCards = () => taskList.map((task, i) => <ToDoCard key={uuidv1()} task={task} index={i} delete={() => deleteCard(i, task.id)} setDraggedItem={setDraggedItem} />);
 
   return <section className="todolist">
@@ -101,6 +111,7 @@ const ToDoList = () => {
       <input type="text" ref={newTaskInput} placeholder="Add a new task"></input>
       <button className="button1" type="submit" onClick={addItem}>Add</button>
     </form>
+    <p>{user}</p>
     {taskList.length > 0 ? <h3>Task List</h3> : ""}
     <section
       id="list"

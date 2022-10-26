@@ -61,6 +61,7 @@ const ToDoCard = (props) => {
   };
 
   const handleOnDrag = (event) => {
+    event.preventDefault();
     event.dataTransfer.setData("text/plain", "VALUE DRAGGED");
     event.dataTransfer.effectAllowed = "move";//The value will be moved from original position
     props.setDraggedItem(event.target);
