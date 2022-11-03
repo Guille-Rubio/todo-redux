@@ -8,9 +8,9 @@ const taskListSlice = createSlice({
     name: 'tasklist',
     initialState,
     reducers: {
-        setInitialTaskList: (state, action) => {
-            const initialTasks = action.payload;
-            return { ...state, tasks: [...state.tasks, initialTasks] }
+        reorderTaskList: (state, action) => {
+            const newOrder = action.payload;
+            return { ...state, tasks: newOrder }
         },
         addNewTask: (state, action) => {
             const newTask = {
@@ -18,7 +18,7 @@ const taskListSlice = createSlice({
                 title: action.payload.title,
                 id: action.payload.id,
                 completed: false,
-                position: state.tasks.length + 1,
+                position: state.tasks.length,
                 email: action.payload.email
             };
 
@@ -62,5 +62,5 @@ const taskListSlice = createSlice({
     }
 });
 
-export const { addNewTask, addManyTasks, editTask, deleteTask, deleteAllTasks, toggleTaskCompleted, setInitialTaskList } = taskListSlice.actions;
+export const { addNewTask, addManyTasks, editTask, deleteTask, deleteAllTasks, toggleTaskCompleted, reorderTaskList } = taskListSlice.actions;
 export default taskListSlice.reducer;

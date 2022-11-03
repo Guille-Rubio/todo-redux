@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { editTask, toggleTaskCompleted } from "../../../redux/slices/taskListSlice";
 import dragIcon from '../../../assets/icons/drag.png';
@@ -12,7 +12,6 @@ const ToDoCard = (props) => {
 
   const [taskInput, setTaskInput] = useState(taskText);
 
-  const nodeRef = useRef(null);
 
   const updateTask = async (event) => {
     event.preventDefault();
@@ -60,30 +59,18 @@ const ToDoCard = (props) => {
     }
   };
 
-  const handleOnDrag = (event) => {
-    event.preventDefault();
-    event.dataTransfer.setData("text/plain", "VALUE DRAGGED");
-    event.dataTransfer.effectAllowed = "move";//The value will be moved from original position
-    props.setDraggedItem(event.target);
-  };
-
-  const handleOnDragEnd = (event) => {
-    //TODO set state to empty when drag ends
-    event.preventDefault();
-    console.log("THE END");
-    props.setDraggedItem('');
-
-  };
-
 
 
 
   return <form
-    ref={nodeRef}
+
     className={`todocard${completed ? "__completed" : ""}`}
     draggable="true"
-    onDrag={handleOnDrag}
-    onDragEnd={handleOnDragEnd}>
+    onDragStart={(event) => props.handleDragStart(event, props.task.position)}
+    onDragEnd={props.handleDragEnd}
+    onDragEnter={(event) => props.handleDragEnter(event, props.task.position)}
+  >
+
 
     <div className="todocard__element" ><img src={dragIcon} alt="drag icon" className="todocard__drag-icon" /></div>
     <input type="checkbox" /* defaultChecked={completed} */ onChange={toggleCompletion} checked={completed} />

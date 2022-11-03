@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { v1 as uuidv1 } from 'uuid';
 import ToDoCard from '../ToDoCard/ToDoCard';
-import { addNewTask, addManyTasks, deleteTask, deleteAllTasks } from '../../../redux/slices/taskListSlice';
+import { addNewTask, addManyTasks, deleteTask, deleteAllTasks, reorderTaskList } from '../../../redux/slices/taskListSlice';
 
 
 
@@ -14,24 +14,20 @@ const ToDoList = () => {
   const dispatch = useDispatch();
   const newTaskInput = useRef(null);
 
-  //let draggedItem;
-
 
   useEffect(() => {
-    //TO DO: Disable strict mode double fetch to print cards save in mongo db
-    //disable where no user is logged (using redux)
-  
-      const fetchTasks = async () => {
-        const request = await axios({
-          method: 'get',
-          url: 'http://localhost:5000/tasks',
-          withCredentials: true
-        });
-        console.log(request.data)
-        dispatch(addManyTasks(request.data));
-      }
-      fetchTasks();
-    
+
+    const fetchTasks = async () => {
+      const request = await axios({
+        method: 'get',
+        url: 'http://localhost:5000/tasks',
+        withCredentials: true
+      });
+      console.log(request.data)
+      dispatch(addManyTasks(request.data));
+    }
+    fetchTasks();
+
     // eslint-disable-next-line
   }, [])
 
@@ -47,7 +43,7 @@ const ToDoList = () => {
         withCredentials: true,
         data: {
           title: taskInput,
-          position: "",
+          position: taskList.length,
         }
       });
 
@@ -90,20 +86,68 @@ const ToDoList = () => {
       alert('Task deletion failed');
     }
   };
+  //************ DRAG AND DROP **********/
+  const dragItem = useRef();
+  const dragOverItem = useRef();
 
 
-  const handleDragEnter = (event) => {
-    event.preventDefault();
-    console.log("YOU CAN DROP HERE");
+  const handleDragStart = (event, position) => {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/html", event.target);
+    dragItem.current = position;
+    console.log("moving", position)
+  };
+
+  const handleDragEnter = (event, position) => {
+    console.log("draged over", position);
+    dragOverItem.current = position;
+  };
+
+  const handleDragEnd = async (event, dragItem, dragOverItem) => {
+
+    console.log(dragItem, dragOverItem);
+    //copy state
+    const newOrder = [...taskList];
+    //remove in old position
+    newOrder.splice(taskList.indexOf(taskList[dragItem.current]), 1);
+    //add in new place
+    newOrder.splice(dragOverItem.current, 0, taskList[dragItem.current]);
+    console.log(newOrder);
+
+    
+  
+    try {
+      await axios({
+        method: 'post',
+        url: 'http://localhost:5000/tasks/edit-positions',
+        withCredentials: true,
+        data: {
+          dragItem: dragItem.current,
+          dragOverItem: dragOverItem.current
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+      alert('Task rearrangement failed');
+
+    }
+
+    dispatch(reorderTaskList(newOrder));
 
   };
 
-  const setDraggedItem = (item) => {
-    // draggedItem = item;
-    //TODO check whether this works or state should be used
-  }
 
-  const printCards = () => taskList.map((task, i) => <ToDoCard key={uuidv1()} task={task} index={i} delete={() => deleteCard(i, task.id)} setDraggedItem={setDraggedItem} />);
+
+
+  const printCards = () => taskList.map((task, i) => <ToDoCard
+    key={uuidv1()}
+    task={task}
+    index={i}
+    delete={() => deleteCard(i, task.id)}
+    handleDragStart={(event, position) => handleDragStart(event, position)}
+    handleDragEnter={(event, position) => handleDragEnter(event, position)}
+    handleDragEnd={(event) => handleDragEnd(event, dragItem, dragOverItem)}
+  />);
 
   return <section className="todolist">
     <h2>To do list</h2>
@@ -115,8 +159,7 @@ const ToDoList = () => {
     {taskList.length > 0 ? <h3>Task List</h3> : ""}
     <section
       id="list"
-      className="todolist__container"
-      onDragEnter={handleDragEnter}>
+      className="todolist__container">
 
       {printCards()}
 
