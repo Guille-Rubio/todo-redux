@@ -16,44 +16,48 @@ const ToDoList = () => {
 
 
   useEffect(() => {
-
-    const fetchTasks = async () => {
-      const request = await axios({
-        method: 'get',
-        url: 'http://localhost:5000/tasks',
-        withCredentials: true
-      });
-      console.log(request.data)
-      dispatch(addManyTasks(request.data));
-    }
-    fetchTasks();
-
+  
+      const fetchTasks = async () => {
+        const request = await axios({
+          method: 'get',
+          url: 'http://localhost:5000/tasks',
+          withCredentials: true
+        });
+        console.log(request.data)
+        dispatch(addManyTasks(request.data));
+      }
+      fetchTasks();
+    
     // eslint-disable-next-line
   }, [])
 
   const addItem = async (event) => {
-    event.preventDefault();
-    const taskInput = newTaskInput.current.value;
-    try {
+    if (user) {
+      event.preventDefault();
+      const taskInput = newTaskInput.current.value;
+      try {
 
-      //Position should be replaced by a serial number to order
-      const request = await axios({
-        method: 'post',
-        url: 'http://localhost:5000/tasks',
-        withCredentials: true,
-        data: {
-          title: taskInput,
-          position: taskList.length,
-        }
-      });
+        //Position should be replaced by a serial number to order
+        const request = await axios({
+          method: 'post',
+          url: 'http://localhost:5000/tasks',
+          withCredentials: true,
+          data: {
+            title: taskInput,
+            position: taskList.length,
+          }
+        });
 
-      console.log("Added item ", request.data.id);
-      dispatch(addNewTask({ title: taskInput, id: request.data.id }));
-      newTaskInput.current.value = "";
+        console.log("Added item ", request.data.id);
+        dispatch(addNewTask({ title: taskInput, id: request.data.id }));
+        newTaskInput.current.value = "";
 
-    } catch (error) {
-      console.log(error.message);
-      alert("Task saving failed");
+      } catch (error) {
+        console.log(error.message);
+        alert("Task saving failed");
+      }
+    } else {
+      alert("Please log in first");
     }
 
   };
@@ -114,8 +118,8 @@ const ToDoList = () => {
     newOrder.splice(dragOverItem.current, 0, taskList[dragItem.current]);
     console.log(newOrder);
 
-    
-  
+
+
     try {
       await axios({
         method: 'post',

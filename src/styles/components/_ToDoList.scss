@@ -29,7 +29,7 @@
 
     &__container {
         @include centered-column-content;
-        flex-direction: column-reverse;
+        flex-direction: column;
         
     }
 
