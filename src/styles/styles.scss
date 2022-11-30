@@ -1,10 +1,10 @@
-@import './views/App';
+@import './views/App.scss';
 
-@import './components/Main';
-@import './components/ToDoCard';
-@import './components/ToDoList';
+@import './components/Main.scss';
+@import './components/ToDoCard.scss';
+@import './components/ToDoList.scss';
 
-@import './elements/button1';
-@import './elements/button-remove-task';
-@import './elements/button_google_login';
-@import './elements/checkbox';
+@import './elements/button1.scss';
+@import './elements/button-remove-task.scss';
+@import './elements/button_google_login.scss';
+@import './elements/checkbox.scss';
