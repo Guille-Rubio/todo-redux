@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { v1 as uuidv1 } from 'uuid';
 import ToDoCard from '../ToDoCard/ToDoCard';
 import { addNewTask, addManyTasks, deleteTask, deleteAllTasks, reorderTaskList } from '../../../redux/slices/taskListSlice';
+import { baseUrl } from "../../../utils/environment";
 
 
 
@@ -20,7 +21,7 @@ const ToDoList = () => {
       const fetchTasks = async () => {
         const request = await axios({
           method: 'get',
-          url: 'http://localhost:5000/tasks',
+          url: `${baseUrl}/tasks`,
           withCredentials: true
         });
         console.log(request.data)
@@ -40,7 +41,7 @@ const ToDoList = () => {
         //Position should be replaced by a serial number to order
         const request = await axios({
           method: 'post',
-          url: 'http://localhost:5000/tasks',
+          url: `${baseUrl}/tasks`,
           withCredentials: true,
           data: {
             title: taskInput,
@@ -67,7 +68,7 @@ const ToDoList = () => {
       console.log("delete item ", i)
       await axios({
         method: 'delete',
-        url: 'http://localhost:5000/tasks',
+        url: `${baseUrl}/tasks`,
         data: { id: id }
 
       });
@@ -82,7 +83,7 @@ const ToDoList = () => {
     try {
       await axios({
         method: 'delete',
-        url: 'http://localhost:5000/tasks/all',
+        url: `${baseUrl}/tasks/all`,
       });
       dispatch(deleteAllTasks());
     } catch (error) {
@@ -123,7 +124,7 @@ const ToDoList = () => {
     try {
       await axios({
         method: 'post',
-        url: 'http://localhost:5000/tasks/edit-positions',
+        url: `${baseUrl}/tasks/edit-positions`,
         withCredentials: true,
         data: {
           dragItem: dragItem.current,

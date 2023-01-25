@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { editTask, toggleTaskCompleted } from "../../../redux/slices/taskListSlice";
 import dragIcon from '../../../assets/icons/drag.png';
 import axios from "axios";
+import { baseUrl } from "../../../utils/environment";
 
 //{index, task, delete }
 const ToDoCard = (props) => {
@@ -24,7 +25,7 @@ const ToDoCard = (props) => {
     try {
       await axios({
         method: 'put',
-        url: 'http://localhost:5000/tasks',
+        url: `${baseUrl}/tasks`,
         data: {
           title: event.target.value,
           id: props.task.id //puede borrar mas de uno en Strict Mode
@@ -46,7 +47,7 @@ const ToDoCard = (props) => {
 
       const edit = await axios({
         method: 'put',
-        url: 'http://localhost:5000/tasks',
+        url: `${baseUrl}/tasks`,
         data: { id: props.task.id, completed: status }
       });
       console.log(completed);
