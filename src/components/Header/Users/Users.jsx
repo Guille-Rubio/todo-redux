@@ -28,11 +28,11 @@ const Users = () => {
 
   return <div>
     {user
-      ? <a href={`${baseUrl}/google/logout`}>
+      ? <a href={`https://to-do-app-api-fawn.vercel.app/google/logout`}>
         <button type="button" className="button_google_login">Logout</button>
       </a>
 
-      : <a href={`${baseUrl}/google/auth/google`}>
+      : <a href={`https://to-do-app-api-fawn.vercel.app/google/auth/google`}>
         <button type="button" className="button_google_login">Sign up</button>
       </a>}
 
