@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
-import { baseUrl } from "../../../utils/environment";
+
+const baseUrl = process.env.NODE_ENV === 'production'
+    ? 'https://to-do-app-api-fawn.vercel.app'
+    : 'http://localhost:5000'
 
 const Users = () => {
 
