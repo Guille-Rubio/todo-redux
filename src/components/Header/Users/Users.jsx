@@ -29,7 +29,7 @@ const Users = () => {
         <button type="button" className="button_google_login">Logout</button>
       </a>
 
-      : <a href={`https://to-do-app-api-fawn.vercel.app/google/auth/google`}>
+      : <a href={`${baseUrl}/google/auth/google`}>
         <button type="button" className="button_google_login">Sign up</button>
       </a>}
 
