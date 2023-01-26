@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { v1 as uuidv1 } from 'uuid';
 import ToDoCard from '../ToDoCard/ToDoCard';
 import { addNewTask, addManyTasks, deleteTask, deleteAllTasks, reorderTaskList } from '../../../redux/slices/taskListSlice';
-import { baseUrl } from "../../../utils/environment";
 
+const baseUrl = 'https://to-do-app-api-fawn.vercel.app'
 
 
 const ToDoList = () => {

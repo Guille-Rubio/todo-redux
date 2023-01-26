@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { editTask, toggleTaskCompleted } from "../../../redux/slices/taskListSlice";
 import dragIcon from '../../../assets/icons/drag.png';
 import axios from "axios";
-import { baseUrl } from "../../../utils/environment";
+const baseUrl = 'https://to-do-app-api-fawn.vercel.app'
 
 //{index, task, delete }
 const ToDoCard = (props) => {
